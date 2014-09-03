@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 
 namespace FindSmallest
 {
     class Program
     {
-        
+        List<int> smallestTotal = new List<int>(); 
         
         private static readonly int[][] Data = new int[][]{
             new[]{1,5,4,2}, 
@@ -16,9 +17,8 @@ namespace FindSmallest
             new[]{1, 22,1,9,-3, 5}
         };
 
-        private static int FindSmallest(int[] numbers)
+        public static int FindSmallest(int[] numbers)
         {
-            List<int> smallestTotal = new List<int>();
             
             if (numbers.Length < 1)
             {
@@ -39,11 +39,10 @@ namespace FindSmallest
             
         }
 
-        private static int FindTotalSmallest()
 
-
-        static void Main()
+        void Main()
         {
+            int[] array = smallestTotal.ToArray();
             foreach (int[] data in Data)
             {
                 Thread t = new Thread(() =>
@@ -52,12 +51,15 @@ namespace FindSmallest
                 Console.WriteLine("\t" + String.Join(", ", data) + "\n-> " + smallest); 
                 });
                 t.Start();
-
-                Thread t2 = new Thread(() =>
-                {
-                    
-                });
+    
             }
+
+            Thread t2 = new Thread(() =>
+            {
+                int thesmallest = FindSmallest(array);
+                Console.WriteLine("Det mindste nummer er: " + thesmallest);
+            });
+            t2.Start();
         }
     }
 }
