@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Threading;
 
 namespace FindSmallest
 {
     class Program
     {
-
+        
+        
         private static readonly int[][] Data = new int[][]{
             new[]{1,5,4,2}, 
             new[]{3,2,4,11,4},
@@ -15,6 +17,10 @@ namespace FindSmallest
 
         private static int FindSmallest(int[] numbers)
         {
+            int[] smallestTotal;
+
+            smallestTotal = new int[5];
+            
             if (numbers.Length < 1)
             {
                 throw new ArgumentException("There must be at least one element in the array");
@@ -26,6 +32,7 @@ namespace FindSmallest
                 if (number < smallestSoFar)
                 {
                     smallestSoFar = number;
+                    smallestTotal.Add(number);
                 }
             }
             return smallestSoFar;
@@ -35,8 +42,12 @@ namespace FindSmallest
         {
             foreach (int[] data in Data)
             {
+                Thread t = new Thread(() =>
+                {
                 int smallest = FindSmallest(data);
-                Console.WriteLine("\t" + String.Join(", ", data) + "\n-> " + smallest);
+                Console.WriteLine("\t" + String.Join(", ", data) + "\n-> " + smallest); 
+                });
+                t.Start();
             }
         }
     }
