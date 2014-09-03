@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FindSmallest
 {
-    class Program
+    public static class Program
     {
-        List<int> smallestTotal = new List<int>(); 
-        
         private static readonly int[][] Data = new int[][]{
             new[]{1,5,4,2}, 
             new[]{3,2,4,11,4},
@@ -19,7 +18,6 @@ namespace FindSmallest
 
         public static int FindSmallest(int[] numbers)
         {
-            
             if (numbers.Length < 1)
             {
                 throw new ArgumentException("There must be at least one element in the array");
@@ -34,32 +32,41 @@ namespace FindSmallest
                     
                 }
             }
-            smallestTotal.Add(smallestSoFar);
+
             return smallestSoFar;
-            
+
         }
 
 
-        void Main()
+        static void Main()
         {
-            int[] array = smallestTotal.ToArray();
+            List<int> smallestTotal = new List<int>(); 
+            List<Task> tasklist = new List<Task>();
+
             foreach (int[] data in Data)
             {
-                Thread t = new Thread(() =>
+                Task t = Task.Run(() =>
                 {
                 int smallest = FindSmallest(data);
-                Console.WriteLine("\t" + String.Join(", ", data) + "\n-> " + smallest); 
+                Console.WriteLine("\t" + String.Join(", ", data) + "\n-> " + smallest);
+                smallestTotal.Add(smallest);
                 });
-                t.Start();
-    
+                
+                tasklist.Add(t);
+                
             }
 
-            Thread t2 = new Thread(() =>
+            Task.WaitAll(tasklist.ToArray());
+            foreach (Task t in tasklist)
             {
-                int thesmallest = FindSmallest(array);
-                Console.WriteLine("Det mindste nummer er: " + thesmallest);
-            });
-            t2.Start();
+                Console.WriteLine(t.Id + " -- " + t.Status);
+            }
+
+            int[] array = smallestTotal.ToArray();
+            int thesmallest = FindSmallest(array);
+            Console.WriteLine("Det mindste tal er: " + thesmallest);
+
+            Console.ReadLine();
         }
     }
 }
