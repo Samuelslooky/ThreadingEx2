@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace FindSmallest
@@ -17,9 +18,7 @@ namespace FindSmallest
 
         private static int FindSmallest(int[] numbers)
         {
-            int[] smallestTotal;
-
-            smallestTotal = new int[5];
+            List<int> smallestTotal = new List<int>();
             
             if (numbers.Length < 1)
             {
@@ -32,11 +31,16 @@ namespace FindSmallest
                 if (number < smallestSoFar)
                 {
                     smallestSoFar = number;
-                    smallestTotal.Add(number);
+                    
                 }
             }
+            smallestTotal.Add(smallestSoFar);
             return smallestSoFar;
+            
         }
+
+        private static int FindTotalSmallest()
+
 
         static void Main()
         {
@@ -48,6 +52,11 @@ namespace FindSmallest
                 Console.WriteLine("\t" + String.Join(", ", data) + "\n-> " + smallest); 
                 });
                 t.Start();
+
+                Thread t2 = new Thread(() =>
+                {
+                    
+                });
             }
         }
     }
