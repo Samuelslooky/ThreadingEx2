@@ -41,25 +41,45 @@ namespace FindSmallest
         static void Main()
         {
             List<int> smallestTotal = new List<int>(); 
-            List<Task> tasklist = new List<Task>();
+            List<Task<int>> tasklist = new List<Task<int>>();
+
+            Task<int>[] tasks = new Task<int>[Data.Length];
 
             foreach (int[] data in Data)
             {
-                Task t = Task.Run(() =>
+                //Task<int> task = new Task<int>(() =>
+                //{
+                //    int result = FindSmallest(data);
+
+                //});
+
+                //Console.WriteLine("Det mindste tal: " + task.Result); 
+
+                //Task t = Task.Run(() =>
+
+                Task<int> task = new Task<int>(() =>
                 {
-                int smallest = FindSmallest(data);
-                Console.WriteLine("\t" + String.Join(", ", data) + "\n-> " + smallest);
-                smallestTotal.Add(smallest);
+                    int smallest = FindSmallest(data);
+                    Console.WriteLine("\t" + String.Join(", ", data) + "\n-> " + smallest);
+                    return smallest;
+
                 });
-                
-                tasklist.Add(t);
-                
+
+                tasklist.Add(task);
+
             }
 
-            Task.WaitAll(tasklist.ToArray());
-            foreach (Task t in tasklist)
+            foreach (Task<int> task in tasklist)
             {
-                Console.WriteLine(t.Id + " -- " + t.Status);
+                task.Start();
+            }
+
+
+            Task.WaitAll(tasklist.ToArray());
+            foreach (Task<int> task in tasklist)
+            {
+                Console.WriteLine(task.Id + " -- " + task.Status + " Result: " + task.Result);
+                smallestTotal.Add(task.Result);
             }
 
             int[] array = smallestTotal.ToArray();
