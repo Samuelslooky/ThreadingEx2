@@ -47,16 +47,6 @@ namespace FindSmallest
 
             foreach (int[] data in Data)
             {
-                //Task<int> task = new Task<int>(() =>
-                //{
-                //    int result = FindSmallest(data);
-
-                //});
-
-                //Console.WriteLine("Det mindste tal: " + task.Result); 
-
-                //Task t = Task.Run(() =>
-
                 Task<int> task = new Task<int>(() =>
                 {
                     int smallest = FindSmallest(data);
@@ -69,9 +59,14 @@ namespace FindSmallest
 
             }
 
+            DateTime starttime = DateTime.Now;
+
             foreach (Task<int> task in tasklist)
             {
+                
+
                 task.Start();
+
             }
 
 
@@ -85,6 +80,13 @@ namespace FindSmallest
             int[] array = smallestTotal.ToArray();
             int thesmallest = FindSmallest(array);
             Console.WriteLine("Det mindste tal er: " + thesmallest);
+
+            DateTime endtime = DateTime.Now;
+            TimeSpan timeUsed = endtime - starttime;
+
+            Console.WriteLine("Tid som opgaven tog: " + timeUsed);
+
+            Console.WriteLine("Q(x_xQ)O-(*_*Q) 'SLAM!!' ");
 
             Console.ReadLine();
         }
